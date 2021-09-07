@@ -1,0 +1,21 @@
+language: generic
+required: sudo
+services:
+  - docker
+before_install: 
+  - docker build -t sparsh-m/react-docker -f Dockerfile.dev .
+
+script: 
+  - docker run -e CI=true sparsh-m/react-docker npm run test
+
+deploy: 
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "sparshdocker"
+  env: "Sparshdocker-env"
+  bucket_name: "elasticbeanstalk-us-east-2-779061254644"
+  bucket_path: "sparshdocker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
